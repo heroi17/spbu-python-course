@@ -156,7 +156,7 @@ class Vector(Matrix):
 		
 		if (not second._VerticalOrientation):
 			
-			secondM: Matrix = Matrix(second._Data).T()
+			secondM = Matrix(second._Data).T()
 		
 		return (firstM * secondM)._Data[0][0]
 	
