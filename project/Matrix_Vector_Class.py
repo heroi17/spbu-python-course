@@ -150,13 +150,21 @@ class Vector(Matrix):
 		
 		if (first._VerticalOrientation):
 			
-			first = first.T()
+			firstM: Matrix = Matrix(first._Data).T()
+		
+		else:
+			
+			firstM: Matrix = Matrix(first._Data)
 		
 		if (not second._VerticalOrientation):
 			
-			matrix = second.T()
+			secondM: Matrix = Matrix(second._Data).T()
 		
-		return (first * second)._Data[0][0]
+		else:
+			
+			secondM: Matrix = Matrix(second._Data)
+		
+		return (firstM * secondM)._Data[0][0]
 	
 
 
