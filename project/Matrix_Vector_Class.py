@@ -147,22 +147,16 @@ class Vector(Matrix):
 		"""
 		Return the simple dot prodoct.
 		"""
+		firstM: Matrix = Matrix(first._Data)
+		secondM: Matrix = Matrix(second._Data)
 		
 		if (first._VerticalOrientation):
 			
-			firstM: Matrix = Matrix(first._Data).T()
-		
-		else:
-			
-			firstM: Matrix = Matrix(first._Data)
+			firstM = Matrix(first._Data).T()
 		
 		if (not second._VerticalOrientation):
 			
 			secondM: Matrix = Matrix(second._Data).T()
-		
-		else:
-			
-			secondM: Matrix = Matrix(second._Data)
 		
 		return (firstM * secondM)._Data[0][0]
 	
