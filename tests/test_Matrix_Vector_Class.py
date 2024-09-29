@@ -45,11 +45,11 @@ class TestMatrix:
         # E * A == A is true
         m1 = Matrix([[1, 0], [0, 1]])
         m2 = Matrix([[2, 10], [33, 15]])
-        assert (m1*m2)._Data == m2._Data
-        
+        assert (m1 * m2)._Data == m2._Data
+
         m1 = Matrix([[1, 0, 0], [0, 1, 0]])
         m2 = Matrix([[2, 10], [33, 15]])
-        
+
         with pytest.raises(ValueError):
             m1 * m2
 
@@ -61,25 +61,23 @@ class TestVector:
 
         vec = Vector([[1], [2], [3]])
         assert vec._Data == [[1], [2], [3]]
-        
+
         with pytest.raises(TypeError):
-            Vector([[1,2], [3,4]])
-        
-        with pytest.raises(TypeError): #vork if vork with matrix
+            Vector([[1, 2], [3, 4]])
+
+        with pytest.raises(TypeError):  # vork if vork with matrix
             Vector([[]])
-    
-    
+
     def test_dot(self) -> None:
         v1 = Vector([[1], [1], [1]])
         v2 = Vector([[1, 1, 1]])
         assert Vector.dot(v1, v2) == 3
         assert Vector.dot(v2, v1) == 3
-        
+
         v1 = Vector([[1, 2, 3]])
         v2 = Vector([[1, 2]])
         with pytest.raises(ValueError):
             Vector.dot(v1, v2)
-
 
     def test_angle(self) -> None:
         v1 = Vector([[0, 0, 0]])
@@ -95,8 +93,7 @@ class TestVector:
         v1 = Vector([[1, 0]])
         v2 = Vector([[1, 1]])
         assert isclose(Vector.angle(v1, v2), pi / 4, abs_tol=1e-5)
-    
-    
+
     def test_length(self) -> None:
         # E * A == A is true
         v1 = Vector([[12, 5]])
