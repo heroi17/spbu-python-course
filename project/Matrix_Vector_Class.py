@@ -4,151 +4,230 @@ from typing import List
 
 class Matrix:
     """
-    Class wich provide standard operation with matrix
-    such as + - * or transpose
+    A class for working with matrices.
+
+    Attributes:
+        _height "int": A hight of the matrix.
+        _width  "int": A width of the matrix.
+        _data: "List[List[float]]": A 2D list representing the matrix.
+
+    Methods:
+        __init__(self, data: list[list[float]])
+            Initializes a Matrix object with the given data.
+
+        __add__(self, other: "Matrix") -> "Matrix"
+            Adds two matrices.
+
+        __iadd__(self, other: "Matrix") -> "Matrix"
+            Iadds other to self matrix.
+
+        __mul__(other: "Matrix") -> "Matrix"
+            Multiplies two matrices.
+
+        T(self) -> "Matrix"
+            Returns the transpose of the matrix.
+
+        __str__(self) -> "str"
+            Returns a string representation of the matrix.
     """
 
     def __init__(self, data: List[List[float]]) -> None:
         """
-        Initializator of matrix.
-        Check for correct input
+        Initializes a Matrix object.
+
+        Args:
+            data "list[list[float]]": A 2D list to create the matrix.
         """
 
         if len(data) == 0:
             raise TypeError("width = 0, bad array given")
-
         if len(data[0]) == 0:
             raise TypeError("first height = 0, bad array given")
-        self._Height: int = len(data)
-        self._Width: int = len(data[0])
-        self._Data = data
-
+        self._height: int = len(data)
+        self._width: int = len(data[0])
+        self._data: List[List[float]] = data
         for i in data:
-            if len(i) != self._Width:
+            if len(i) != self._width:
                 raise TypeError("Data can not be represented as matrix")
 
     def __add__(self, other: "Matrix") -> "Matrix":
         """
-        Return new Matrix wich equal to sum of self and other matrix.
-        """
-        if self._Height != other._Height or self._Width != other._Width:
-            raise ValueError("Diferent Dimention of Matrix, Sum cannot be calculated.")
+        Adds two matrices.
 
+        Args:
+            self  "Matrix": The first matrix.
+            other "Matrix": The second matrix.
+
+        Returns:
+            "Matrix": The resulting matrix after addition.
+        """
+
+        if self._height != other._height or self._width != other._width:
+            raise ValueError("Diferent Dimention of Matrix, Sum cannot be calculated.")
         return Matrix(
             [
-                [self._Data[i][j] + other._Data[i][j] for j in range(self._Width)]
-                for i in range(self._Height)
+                [self._data[i][j] + other._data[i][j] for j in range(self._width)]
+                for i in range(self._height)
             ]
         )
 
     def __iadd__(self, other: "Matrix") -> "Matrix":
         """
-        Return Self wich is chenged by adding other matrix.
+        Iadds second matrix to first matrix.
+
+        Args:
+            self  "Matrix": The first matrix.
+            other "Matrix": The second matrix.
+
+        Returns:
+            "Matrix": The self matrix which changed by iadding other matrix.
         """
 
-        if self._Height != other._Height or self._Width != other._Width:
+        if self._height != other._height or self._width != other._width:
             raise ValueError("Diferent Dimention of Matrix, Sum cannot be calculated.")
-        for i in range(self._Height):
-            for j in range(self._Width):
-                self._Data[i][j] += other._Data[i][j]
+        for i in range(self._height):
+            for j in range(self._width):
+                self._data[i][j] += other._data[i][j]
         return self
 
     def __mul__(self, other: "Matrix") -> "Matrix":
         """
-        Simple matrix multiplier.
+        Multiply two given matrises.
+
+        Args:
+            self  "Matrix": The first matrix.
+            other "Matrix": The second matrix.
+
+        Returns:
+            "Matrix": The result matrix after multiplication.
         """
 
-        if self._Width != other._Height:
+        if self._width != other._height:
             raise ValueError("Cannot mult matrises.")
-
         return Matrix(
             [
                 [
                     sum(
-                        self._Data[i][j] * other._Data[j][k] for j in range(self._Width)
+                        self._data[i][j] * other._data[j][k] for j in range(self._width)
                     )
-                    for k in range(other._Width)
+                    for k in range(other._width)
                 ]
-                for i in range(self._Height)
+                for i in range(self._height)
             ]
         )
 
     def T(self) -> "Matrix":
         """
-        Simple matrix transpose.
+        Find Transpose matrix to given one.
+
+        Args:
+            self "Matrix": The matrix to transpose.
+
+        Returns:
+            "Matrix": Transposed given matrix.
         """
-        return Matrix(list(map(list, zip(*self._Data))))
+
+        return Matrix(list(map(list, zip(*self._data))))
 
     def __str__(self) -> str:
-        return "\n".join(["\t".join(map(str, row)) for row in self._Data])
+        return "\n".join(["\t".join(map(str, row)) for row in self._data])
 
 
 class Vector(Matrix):
     """
-    Vecotr - is A matrix with one of dim = 1.
-    Add some special operation such as length, dot, angle.
+    A class for working with vectors.
+    Inherits all attributes and Methods from the parent "Matrix" class.
+
+    Attributes:
+        _VerticalOrientation ("bool"): A type of oreintation vector (horisont./vertical.)
+
+    Methods:
+        __init__(self, data: list[list[float]])
+            Initializes a Vector object with the given data.
+
+        length(self) -> float
+            Returns the length of the vector in math means.
+
+    Static Methods:
+        dot(first: "Vector", second: "Vector") -> float
+            Returns the dot product of the vectors.
+
+        angle(first: "Vector", second: "Vector") -> float
+            Returns the angle between two vectors in radians.
     """
 
     def __init__(self, data: List[List[float]]) -> None:
+        """
+        Initializes a Vector object.
+
+        Parameters:
+            data "List[List[float]]": Initial matrix for our vector (should be [1xN] or [Nx1]).
+        """
+
         super().__init__(data)
-
-        if self._Height != 1 and self._Width != 1:
+        if self._height != 1 and self._width != 1:
             raise TypeError("Given matrix cannot be represent as vector.")
-
-        self._VerticalOrientation: bool = self._Width == 1
-
-    def __len__(self) -> int:
-        """
-        Return size of vector.
-        """
-
-        if self._VerticalOrientation:
-            return len(self._Data)
-        return len(self._Data[0])
+        self._VerticalOrientation: bool = self._width == 1
 
     def length(self) -> float:
         """
-        Return length of Vector in means of Euclidian spase.
+        Calculates the length of a vector.
+
+        Args:
+            self "Vector": The vector which length we calculate.
+
+        Returns:
+            float: The length of the vector.
         """
 
         if self._VerticalOrientation:
-
-            return sqrt(sum([el[0] * el[0] for el in self._Data]))
-
-        return sqrt(sum([el * el for el in self._Data[0]]))
+            return sqrt(sum([el[0] * el[0] for el in self._data]))
+        return sqrt(sum([el * el for el in self._data[0]]))
 
     @staticmethod
     def dot(first: "Vector", second: "Vector") -> float:
         """
-        Return the simple dot prodoct.
+        Calculates the dot product of two vectors.
+
+        Args:
+            first  "Vector": The first vector.
+            second "Vector": The second vector.
+
+        Returns:
+            float: The dot product of the two vectors.
         """
-        firstM: Matrix = Matrix(first._Data)
-        secondM: Matrix = Matrix(second._Data)
 
+        firstM: Matrix = Matrix(first._data)
+        secondM: Matrix = Matrix(second._data)
         if first._VerticalOrientation:
-
-            firstM = Matrix(first._Data).T()
-
+            firstM = Matrix(first._data).T()
         if not second._VerticalOrientation:
-
-            secondM = Matrix(second._Data).T()
-
-        return (firstM * secondM)._Data[0][0]
+            secondM = Matrix(second._data).T()
+        return (firstM * secondM)._data[0][0]
 
     @staticmethod
     def angle(first: "Vector", second: "Vector") -> float:
         """
-        Return number between 0 and Pi - angle between first and second vectors.
+        Calculates the angle between two vectors in radians.
+
+        Args:
+            first  "Vector": The first vector.
+            second "Vector": The second vector.
+
+        Returns:
+            float: The angle between the two vectors in radians.
         """
 
         length1: float = first.length()
-
         length2: float = second.length()
-
         if length1 == 0 or length2 == 0:
-
             raise ZeroDivisionError(
                 "Cannot find angle between vectors, where one of them is 0-vector."
             )
-
-        return acos(Vector.dot(first, second) / (length1 * length2))
+        cosVal: float = Vector.dot(first, second) / (length1 * length2)
+        # predict problems such as cosVal = +-1.00___02
+        if cosVal < -1:
+            cosVal = -1
+        if cosVal > 1:
+            cosVal = 1
+        return acos(cosVal)

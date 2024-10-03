@@ -1,106 +1,177 @@
 import pytest
-from math import isclose, pi
-from project.Matrix_Vector_Class import Matrix, Vector
+from math import isclose, pi, sqrt
+from project.matrix_vector_class import Matrix, Vector
 
 
-class TestMatrix:
-    def test_init(self) -> None:
-        matrix = Matrix([[4, 5, 6], [1, 2, 3]])
-        assert matrix._Data == [[4, 5, 6], [1, 2, 3]]
+def test_matrix_init() -> None:
+    matrix = Matrix([[4, 5, 6], [1, 2, 3]])
+    assert matrix._data == [[4, 5, 6], [1, 2, 3]]
 
-        with pytest.raises(TypeError):
-            Matrix([[1], [1, 1]])
+    with pytest.raises(TypeError):
+        Matrix([[1], [1, 1]])
 
-        with pytest.raises(TypeError):
-            Matrix([])
-
-    def test_add_iadd(self) -> None:
-        m1 = Matrix([[1, 2], [3, 4]])
-        m2 = Matrix([[10, 20], [30, 40]])
-        assert (m1 + m2)._Data == [[11, 22], [33, 44]]
-
-        m1 = Matrix([[12, 23], [34, 45]])
-        m2 = Matrix([[16, 27], [38, 49]])
-        assert (m1 + m2)._Data == [[28, 50], [72, 94]]
-
-        m1 = Matrix([[1, 2], [3, 4]])
-        m2 = Matrix([[1]])
-        with pytest.raises(ValueError):
-            m1 + m2
-
-        m1 = Matrix([[1, 2], [3, 4]])
-        m2 = Matrix([[1]])
-        with pytest.raises(ValueError):
-            m1 += m2
-
-    def test_transpose(self) -> None:
-
-        m1 = Matrix([[1, 2], [3, 4], [5, 6]])
-        assert m1.T()._Data == [[1, 3, 5], [2, 4, 6]]
-
-        m1 = Matrix([[1]])
-        assert m1.T()._Data == [[1]]
-
-    def test_mult(self) -> None:
-        # E * A == A is true
-        m1 = Matrix([[1, 0], [0, 1]])
-        m2 = Matrix([[2, 10], [33, 15]])
-        assert (m1 * m2)._Data == m2._Data
-
-        m1 = Matrix([[1, 0, 0], [0, 1, 0]])
-        m2 = Matrix([[2, 10], [33, 15]])
-
-        with pytest.raises(ValueError):
-            m1 * m2
+    with pytest.raises(TypeError):
+        Matrix([])
 
 
-class TestVector:
-    def test_init(self) -> None:
-        vec = Vector([[1, 2, 3]])
-        assert vec._Data == [[1, 2, 3]]
+@pytest.mark.parametrize(
+    "a, b, res",
+    [
+        (
+            [
+                [8, 3, 4, -1, -8, -10, -4, 2, -10, 4, -5],
+                [-8, -5, 2, -10, 6, 9, 2, 7, 10, 2, 0],
+                [-2, 10, 4, 8, -1, -4, 0, 5, 2, -6, -2],
+                [10, 8, -7, -7, 4, -5, 1, 10, -2, -7, 5],
+                [10, -9, 10, 3, 4, 8, 7, -3, 8, 1, -1],
+                [-9, 3, 9, 8, -6, -10, 0, 10, -9, -3, -8],
+                [-2, -5, -1, 3, 4, -9, 7, -8, -4, 5, 1],
+            ],
+            [
+                [9, -2, -3, 0, 7, 9, -7, 4, -4, -2, 8],
+                [-6, -5, 9, 10, -5, 3, -10, 2, 10, -7, 2],
+                [0, -2, -6, 8, -3, -5, -5, -2, 10, 0, 2],
+                [-3, 8, -2, -3, -4, 0, 9, -8, -7, -2, 9],
+                [-5, -2, -9, -1, 4, -10, -7, 4, -7, -1, -6],
+                [-4, 5, -8, 9, 6, -9, -4, -1, 1, 1, 9],
+                [7, -4, -2, -10, 8, -5, 8, 10, 6, 1, -9],
+            ],
+            [
+                [17, 1, 1, -1, -1, -1, -11, 6, -14, 2, 3],
+                [-14, -10, 11, 0, 1, 12, -8, 9, 20, -5, 2],
+                [-2, 8, -2, 16, -4, -9, -5, 3, 12, -6, 0],
+                [7, 16, -9, -10, 0, -5, 10, 2, -9, -9, 14],
+                [5, -11, 1, 2, 8, -2, 0, 1, 1, 0, -7],
+                [-13, 8, 1, 17, 0, -19, -4, 9, -8, -2, 1],
+                [5, -9, -3, -7, 12, -14, 15, 2, 2, 6, -8],
+            ],
+        )
+    ],
+)
+def test_matrix_add_iadd(a, b, res) -> None:
+    m1: Matrix = Matrix(a)
+    m2: Matrix = Matrix(b)
+    assert (m1 + m2)._data == res
+    m1 += m2
+    assert m1._data == res
 
-        vec = Vector([[1], [2], [3]])
-        assert vec._Data == [[1], [2], [3]]
 
-        with pytest.raises(TypeError):
-            Vector([[1, 2], [3, 4]])
+def test_matrix_add_iadd_correct_input() -> None:
+    m1 = Matrix([[1, 2], [3, 4]])
+    m2 = Matrix([[1]])
+    with pytest.raises(ValueError):
+        m1 + m2
 
-        with pytest.raises(TypeError):  # vork if vork with matrix
-            Vector([[]])
+    m1 = Matrix([[1, 2], [3, 4]])
+    m2 = Matrix([[1]])
+    with pytest.raises(ValueError):
+        m1 += m2
 
-    def test_dot(self) -> None:
-        v1 = Vector([[1], [1], [1]])
-        v2 = Vector([[1, 1, 1]])
-        assert Vector.dot(v1, v2) == 3
-        assert Vector.dot(v2, v1) == 3
 
-        v1 = Vector([[1, 2, 3]])
-        v2 = Vector([[1, 2]])
-        with pytest.raises(ValueError):
-            Vector.dot(v1, v2)
+@pytest.mark.parametrize(
+    "a, res",
+    [
+        ([[1, 2, 3, 4, 5, 6]], [[1], [2], [3], [4], [5], [6]]),
+        ([[1, 2], [3, 4], [5, 6]], [[1, 3, 5], [2, 4, 6]]),
+        ([[1]], [[1]]),
+    ],
+)
+def test_matrix_transpose(a, res) -> None:
+    assert Matrix(a).T()._data == res
 
-    def test_angle(self) -> None:
-        v1 = Vector([[0, 0, 0]])
-        v2 = Vector([[1, 1, 1]])
-        with pytest.raises(ZeroDivisionError):
-            Vector.angle(v1, v2)
 
-        v1 = Vector([[1, 0]])
-        v2 = Vector([[1, 1, 1]])
-        with pytest.raises(ValueError):
-            Vector.angle(v1, v2)
+@pytest.mark.parametrize(
+    "a, b, res",
+    [
+        ([[1, 0], [0, 1]], [[2, 10], [33, 15]], [[2, 10], [33, 15]]),
+        (
+            [[1, 0], [0, 2], [0, 3]],
+            [[1, 3, 8], [2, 6, 9]],
+            [[1, 3, 8], [4, 12, 18], [6, 18, 27]],
+        ),
+    ],
+)
+def test_matrix_mult(a, b, res) -> None:
+    assert (Matrix(a) * Matrix(b))._data == res
 
-        v1 = Vector([[1, 0]])
-        v2 = Vector([[1, 1]])
-        assert isclose(Vector.angle(v1, v2), pi / 4, abs_tol=1e-5)
 
-    def test_length(self) -> None:
-        # E * A == A is true
-        v1 = Vector([[12, 5]])
-        assert v1.length() == 13
+def test_matrix_mult_correct_input() -> None:
+    m1 = Matrix([[1, 0, 0], [0, 1, 0]])
+    m2 = Matrix([[2, 10], [33, 15]])
+    with pytest.raises(ValueError):
+        m1 * m2
 
-        v1 = Vector([[0, 0, 0, 0, 0, 0]])
-        assert v1.length() == 0
 
-        v1 = Vector([[-1]])
-        assert v1.length() == 1
+def test_vector_init() -> None:
+    vec = Vector([[1, 2, 3]])
+    assert vec._data == [[1, 2, 3]]
+
+    vec = Vector([[1], [2], [3]])
+    assert vec._data == [[1], [2], [3]]
+
+    with pytest.raises(TypeError):
+        Vector([[1, 2], [3, 4]])
+
+    with pytest.raises(TypeError):
+        Vector([[]])
+
+
+@pytest.mark.parametrize(
+    "a, b, res",
+    [
+        ([1, 1, 1], [1, 1, 1], 3),
+        ([1, 2, 3], [3, 2, 1], 10),
+        ([-1, 2, 3, 1], [2, 4, 5, 0], 21),
+    ],
+)
+def test_vector_dot(a, b, res) -> None:
+    v1 = Vector([[el] for el in a])
+    v2 = Vector([b])
+    assert Vector.dot(v1, v2) == res
+
+
+def test_vector_dot_correct_input() -> None:
+    v1 = Vector([[1, 2, 3]])
+    v2 = Vector([[1, 2]])
+    with pytest.raises(ValueError):
+        Vector.dot(v1, v2)
+
+
+@pytest.mark.parametrize(
+    "a, b, res",
+    [
+        ([1, 1, 1], [1, 1, 1], 0),
+        ([1, 0, 0], [1, 1, 0], pi / 4),
+        ([1, 0, 0, 0], [0, 1, 0, 0], pi / 2),
+    ],
+)
+def test_vector_angle(a, b, res) -> None:
+    assert isclose(Vector.angle(Vector([a]), Vector([b])), res, abs_tol=1e-5)
+
+
+def test_vector_angle_correct_input() -> None:
+    v1 = Vector([[0, 0, 0]])
+    v2 = Vector([[1, 1, 1]])
+    with pytest.raises(ZeroDivisionError):
+        Vector.angle(v1, v2)
+
+    v1 = Vector([[1, 0]])
+    v2 = Vector([[1, 1, 1]])
+    with pytest.raises(ValueError):
+        Vector.angle(v1, v2)
+
+
+@pytest.mark.parametrize(
+    "a, res",
+    [
+        ([1, 0, 0], 1),
+        ([4, 3, 0, 0], 5),
+        ([1, 1, 0], sqrt(2)),
+        ([1.1, 2.2], 1.1 * sqrt(5)),
+        ([0, 0, 0, 0], 0),
+        ([-12, 0, 5], 13),
+        ([-1], 1),
+    ],
+)
+def test_vector_length(a, res) -> None:
+    assert isclose((Vector([a])).length(), res, abs_tol=1e-4)
