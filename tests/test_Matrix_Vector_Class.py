@@ -1,10 +1,11 @@
 import pytest
 from math import isclose, pi, sqrt
 from project.matrix_vector_class import Matrix, Vector
+from typing import List
 
 
 def test_matrix_init() -> None:
-    matrix = Matrix([[4, 5, 6], [1, 2, 3]])
+    matrix: Matrix = Matrix([[4, 5, 6], [1, 2, 3]])
     assert matrix._data == [[4, 5, 6], [1, 2, 3]]
 
     with pytest.raises(TypeError):
@@ -48,7 +49,9 @@ def test_matrix_init() -> None:
         )
     ],
 )
-def test_matrix_add_iadd(a, b, res) -> None:
+def test_matrix_add_iadd(
+    a: List[List[float]], b: List[List[float]], res:  List[List[float]]
+) -> None:
     m1: Matrix = Matrix(a)
     m2: Matrix = Matrix(b)
     assert (m1 + m2)._data == res
@@ -57,8 +60,8 @@ def test_matrix_add_iadd(a, b, res) -> None:
 
 
 def test_matrix_add_iadd_correct_input() -> None:
-    m1 = Matrix([[1, 2], [3, 4]])
-    m2 = Matrix([[1]])
+    m1: Matrix = Matrix([[1, 2], [3, 4]])
+    m2: Matrix = Matrix([[1]])
     with pytest.raises(ValueError):
         m1 + m2
 
@@ -76,7 +79,7 @@ def test_matrix_add_iadd_correct_input() -> None:
         ([[1]], [[1]]),
     ],
 )
-def test_matrix_transpose(a, res) -> None:
+def test_matrix_transpose(a: List[List[float]], res: List[List[float]]) -> None:
     assert Matrix(a).T()._data == res
 
 
@@ -91,19 +94,21 @@ def test_matrix_transpose(a, res) -> None:
         ),
     ],
 )
-def test_matrix_mult(a, b, res) -> None:
+def test_matrix_mult(
+    a:  List[List[float]], b: List[List[float]], res:  List[List[float]]
+) -> None:
     assert (Matrix(a) * Matrix(b))._data == res
 
 
 def test_matrix_mult_correct_input() -> None:
-    m1 = Matrix([[1, 0, 0], [0, 1, 0]])
-    m2 = Matrix([[2, 10], [33, 15]])
+    m1: Matrix = Matrix([[1, 0, 0], [0, 1, 0]])
+    m2: Matrix = Matrix([[2, 10], [33, 15]])
     with pytest.raises(ValueError):
         m1 * m2
 
 
 def test_vector_init() -> None:
-    vec = Vector([[1, 2, 3]])
+    vec: Vector = Vector([[1, 2, 3]])
     assert vec._data == [[1, 2, 3]]
 
     vec = Vector([[1], [2], [3]])
@@ -124,15 +129,15 @@ def test_vector_init() -> None:
         ([-1, 2, 3, 1], [2, 4, 5, 0], 21),
     ],
 )
-def test_vector_dot(a, b, res) -> None:
-    v1 = Vector([[el] for el in a])
-    v2 = Vector([b])
+def test_vector_dot(a: List[float], b: List[float], res: float) -> None:
+    v1: Vector = Vector([[el] for el in a])
+    v2: Vector = Vector([b])
     assert Vector.dot(v1, v2) == res
 
 
 def test_vector_dot_correct_input() -> None:
-    v1 = Vector([[1, 2, 3]])
-    v2 = Vector([[1, 2]])
+    v1: Vector = Vector([[1, 2, 3]])
+    v2: Vector = Vector([[1, 2]])
     with pytest.raises(ValueError):
         Vector.dot(v1, v2)
 
@@ -145,13 +150,13 @@ def test_vector_dot_correct_input() -> None:
         ([1, 0, 0, 0], [0, 1, 0, 0], pi / 2),
     ],
 )
-def test_vector_angle(a, b, res) -> None:
+def test_vector_angle(a: List[float], b: List[float], res: float) -> None:
     assert isclose(Vector.angle(Vector([a]), Vector([b])), res, abs_tol=1e-5)
 
 
 def test_vector_angle_correct_input() -> None:
-    v1 = Vector([[0, 0, 0]])
-    v2 = Vector([[1, 1, 1]])
+    v1: Vector = Vector([[0, 0, 0]])
+    v2: Vector = Vector([[1, 1, 1]])
     with pytest.raises(ZeroDivisionError):
         Vector.angle(v1, v2)
 
@@ -173,5 +178,5 @@ def test_vector_angle_correct_input() -> None:
         ([-1], 1),
     ],
 )
-def test_vector_length(a, res) -> None:
+def test_vector_length(a: List[float], res: float) -> None:
     assert isclose((Vector([a])).length(), res, abs_tol=1e-4)
