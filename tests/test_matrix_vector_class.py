@@ -50,7 +50,7 @@ def test_matrix_init() -> None:
     ],
 )
 def test_matrix_add_iadd(
-    a: List[List[float]], b: List[List[float]], res:  List[List[float]]
+    a: List[List[float]], b: List[List[float]], res: List[List[float]]
 ) -> None:
     m1: Matrix = Matrix(a)
     m2: Matrix = Matrix(b)
@@ -95,7 +95,7 @@ def test_matrix_transpose(a: List[List[float]], res: List[List[float]]) -> None:
     ],
 )
 def test_matrix_mult(
-    a:  List[List[float]], b: List[List[float]], res:  List[List[float]]
+    a: List[List[float]], b: List[List[float]], res: List[List[float]]
 ) -> None:
     assert (Matrix(a) * Matrix(b))._data == res
 
