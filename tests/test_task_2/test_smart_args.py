@@ -12,12 +12,12 @@ def help_func_1(
     a1: Any,
     a2: Any = 2,
     a3: Any = 3,
-    *args,
+    *args: tuple[Any],
     n1: Any,
     n2: Any = 12,
     n3: Any = 13,
-    **kwargs
-) -> list:
+    **kwargs: dict[str, Any]
+) -> list[Any]:
     return [a1, a2, a3, args, n1, n2, n3, kwargs]
 
 
@@ -39,7 +39,7 @@ def test_invalid_using() -> None:
     with pytest.raises(TypeError):
 
         @smart_args
-        def func1(*, a: Union[Evaluated, int] = Evaluated(get_random_number)):
+        def func1(*, a: Union[Evaluated, int] = Evaluated(get_random_number)) -> None:
             pass
 
         func1(a=Isolated())
@@ -48,7 +48,7 @@ def test_invalid_using() -> None:
     with pytest.raises(TypeError):
 
         @smart_args
-        def func1(*, a: Union[Evaluated, int] = Evaluated(get_random_number)):
+        def func1(*, a: Union[Evaluated, int] = Evaluated(get_random_number)) -> None:
             pass
 
         func1(a=Isolated())
@@ -57,7 +57,7 @@ def test_invalid_using() -> None:
     with pytest.raises(ValueError):
 
         @smart_args
-        def func1(*, a: Union[Isolated, Any] = Isolated()):
+        def func1(*, a: Union[Isolated, Any] = Isolated()) -> None:
             pass
 
         func1()
@@ -66,7 +66,7 @@ def test_invalid_using() -> None:
     with pytest.raises(TypeError):
 
         @smart_args
-        def func1(*, a: Union[Evaluated, Any] = Evaluated(lambda x: x)):
+        def func1(*, a: Union[Evaluated, Any] = Evaluated(lambda x: x)) -> None:
             pass
 
         func1()
@@ -75,7 +75,7 @@ def test_invalid_using() -> None:
     with pytest.raises(TypeError):
 
         @smart_args(enable_positional=False)
-        def func1(a: Union[Evaluated, int] = Evaluated(get_random_number)):
+        def func1(a: Union[Evaluated, int] = Evaluated(get_random_number)) -> None:
             pass
 
         func1()
@@ -84,17 +84,17 @@ def test_invalid_using() -> None:
 @pytest.mark.parametrize(
     "func, args, kwargs, expected_data, enable_positional",
     [
-        (help_func_1, [1], {"n1": 11}, [1, 2, 3, (), 11, 12, 13, {}], True),
+        (help_func_1, (1,), {"n1": 11}, [1, 2, 3, (), 11, 12, 13, {},], True),
         (
             help_func_1,
-            [1, 22],
+            (1, 22,),
             {"n1": 11, "HELLO": None},
             [1, 22, 3, (), 11, 12, 13, {"HELLO": None}],
             True,
         ),
         (
             help_func_1,
-            [11, 22, 33, 44, 55],
+            (11, 22, 33, 44, 55,),
             {"n1": 11},
             [11, 22, 33, (44, 55), 11, 12, 13, {}],
             True,
@@ -102,7 +102,7 @@ def test_invalid_using() -> None:
     ],
 )
 def test_correct_argument_providing(
-    func, args, kwargs, expected_data, enable_positional
+    func: Callable[..., Any], args: tuple[Any], kwargs: dict[str, Any], expected_data: list[Any], enable_positional: bool
 ) -> None:
     new_func = smart_args(func, enable_positional=enable_positional)
     assert new_func(*args, **kwargs) == expected_data
@@ -112,51 +112,51 @@ def test_Isolated_argument() -> None:
     # test with positional
     # test with dict
     @smart_args
-    def check_isolation_1(d: Union[dict, Isolated] = Isolated()) -> dict:
+    def check_isolation_1(d: Union[dict, Isolated] = Isolated()) -> dict[Any, Any]:
         assert type(d) is dict
         if type(d) is dict:
             d["a"] = 0
             return d
         return {"a": 1000}
 
-    no_mutable_1 = {"a": 10}
+    no_mutable_1: dict[Any, Any] = {"a": 10}
     assert check_isolation_1(no_mutable_1)["a"] == 0 and no_mutable_1["a"] == 10
 
     # tset with list
     @smart_args
-    def check_isolation_2(d: Union[list, Isolated] = Isolated()) -> list:
+    def check_isolation_2(d: Union[list, Isolated] = Isolated()) -> list[Any]:
         assert type(d) is list
         if type(d) is list:
             d.append(0)
             return d
         return []
 
-    list_for_test_1: list = [10]
+    list_for_test_1: list[Any] = [10]
     assert check_isolation_2(list_for_test_1) == [10, 0] and list_for_test_1 == [10]
 
     # test with named
     # test with dict
     @smart_args
-    def check_isolation_3(*, d: Union[dict, Isolated] = Isolated()) -> dict:
+    def check_isolation_3(*, d: Union[dict, Isolated] = Isolated()) -> dict[Any, Any]:
         assert type(d) is dict
         if type(d) is dict:
             d["a"] = 0
             return d
         return {"a": 1000}
 
-    no_mutable_2 = {"a": 10}
+    no_mutable_2: dict[Any, Any] = {"a": 10}
     assert check_isolation_3(d=no_mutable_2)["a"] == 0 and no_mutable_2["a"] == 10
 
     # tset with list
     @smart_args
-    def check_isolation_4(*, d: Union[list, Isolated] = Isolated()) -> list:
+    def check_isolation_4(*, d: Union[list, Isolated] = Isolated()) -> list[Any]:
         assert type(d) is list
         if type(d) is list:
             d.append(0)
             return d
         return []
 
-    list_for_test_2: list = [10]
+    list_for_test_2: list[Any] = [10]
     assert check_isolation_4(d=list_for_test_2) == [10, 0] and list_for_test_2 == [10]
 
 
@@ -166,7 +166,7 @@ def test_Evaluated_argument() -> None:
     # test with positional
     id_counter: int = 0
 
-    def get_new_id():
+    def get_new_id() -> int:
         nonlocal id_counter
         id_counter += 1
         return id_counter

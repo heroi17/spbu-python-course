@@ -74,7 +74,7 @@ class Evaluated:
     15 150
     """
 
-    def __init__(self, func: Callable) -> None:
+    def __init__(self, func: Callable[[], Any]) -> None:
         self._func = func
         if type(func) is Isolated:
             raise TypeError("You cannot use as argument Isolated into Evaluated.")
@@ -89,7 +89,7 @@ class Evaluated:
         return self._func()
 
 
-def CheckForCorrectArgs(args: tuple, kwargs: dict) -> None:
+def CheckForCorrectArgs(args: tuple[Any], kwargs: dict[str, Any]) -> None:
     """
     Special function for smart_args.
     Calls by smart_args when we should to check eather call user func with agrument like:
@@ -108,7 +108,7 @@ def CheckForCorrectArgs(args: tuple, kwargs: dict) -> None:
             raise TypeError(f"You cannot use Isolated() when call the function.")
 
 
-def fillDictByDefaults(dict_to_fill: dict, dict_defoults: dict) -> None:
+def fillDictByDefaults(dict_to_fill: dict[str, Any], dict_defoults: dict[str, Any]) -> None:
     """
     Special function for smart_args.
 
@@ -178,7 +178,7 @@ def smart_args(
                 )
 
     @wraps(func)
-    def inner(*args, **kwargs) -> Union[Callable, Any]:
+    def inner(*args, **kwargs) -> Union[Callable[..., Any], Any]:
         # Check for invalid using smart args functions
         CheckForCorrectArgs(args, kwargs)
 
@@ -189,18 +189,18 @@ def smart_args(
         return_kwonlyargs: dict[str, Any] = {}
 
         # Defoult args.
-        default_args: dict = {}
+        default_args: dict[str, Any] = {}
         if not data.defaults is None:
             for i in range(len(data.defaults)):
                 default_args[
                     data.args[i + len(data.args) - len(data.defaults)]
                 ] = data.defaults[i]
 
-        default_kwonlyargs: dict = {}
+        default_kwonlyargs: dict[str, Any] = {}
         if not data.kwonlydefaults is None:
             default_kwonlyargs = copy.copy(data.kwonlydefaults)
 
-        return_args_dict: dict = {}
+        return_args_dict: dict[str, Any] = {}
 
         # all args is used
         for i in range(len(args)):

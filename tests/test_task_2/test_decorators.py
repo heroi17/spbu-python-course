@@ -1,9 +1,9 @@
 import pytest
 from project.task_2.decorators import curry_explicit, uncurry_explicit
-
+from typing import Any
 
 def test_curry_errors() -> None:
-    def help_func(*args) -> int:
+    def help_func(*args: tuple[Any]) -> int:
         return sum(args)
 
     with pytest.raises(TypeError):
@@ -14,7 +14,7 @@ def test_curry_errors() -> None:
 
 
 def test_none_return() -> None:
-    def help_func(*args):
+    def help_func(*args: tuple[Any]):
         return sum(args)
 
     assert curry_explicit(help_func, 3)(1)(2)(3) is None

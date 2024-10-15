@@ -6,7 +6,7 @@ from typing import Callable, Any, Union, Type
 
 
 def fib(
-    n: int, *, doublestep: bool = False, recurcsive_call: Union[None, Callable] = None
+    n: int, *, doublestep: bool = False, recurcsive_call: Union[None, Callable[..., int]] = None
 ) -> int:
     if recurcsive_call is None:
         return 0
@@ -34,7 +34,7 @@ def fib(
 
 
 def steps_to(
-    stair: int, *, extrasteps: int = 0, recurcsive_call: Union[None, Callable] = None
+    stair: int, *, extrasteps: int = 0, recurcsive_call: Union[None, Callable[..., int]] = None
 ) -> int:
     if recurcsive_call is None:
         return 0
@@ -78,10 +78,10 @@ def steps_to(
     ],
 )
 def test_correct_cache_calls_and_speed_test_for_recursive(
-    func: Callable,
+    func: Callable[..., Any],
     capacity: int,
-    args: tuple,
-    kwds: dict,
+    args: tuple[Any],
+    kwds: dict[str, Any],
     faster_times: Union[float, None],
 ) -> None:
 
@@ -109,7 +109,7 @@ def test_correct_internal_caching() -> None:
     counter: int = 0
 
     @cache_calls(capacity=3)
-    def help_func(value) -> int:
+    def help_func(value: int) -> int:
         nonlocal counter
         counter += 1
         return counter * 1000 + value
@@ -192,6 +192,6 @@ def test_correct_internal_caching() -> None:
     ],
 )
 def test_cache_for_Pythons_functions(
-    func: Callable, capacity: int, args: list, kwds: dict
+    func: Callable[..., Any], capacity: int, args: dict[Any], kwds: dict[str, Any]
 ) -> None:
     assert func(*args, **kwds) == cache_calls(func, capacity=capacity)(*args, **kwds)

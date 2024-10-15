@@ -1,9 +1,8 @@
 from typing import Callable, Any, Union, Generator
 from inspect import getfullargspec, FullArgSpec
-from functools import wraps
+from functools import lru_cache, wraps
 
-
-def make_key(args: tuple, kwds: dict) -> tuple:
+def make_key(args: tuple[Any], kwds: dict[str, Any], kwd_mark: tuple[object] = (object(),)) -> tuple[Any]:
     """
     Make tuple from args and kwds, because dict is not hasheble type.
 
@@ -22,9 +21,10 @@ def make_key(args: tuple, kwds: dict) -> tuple:
     tuple
         The hashable equivalent of the parameters
     """
-    key: tuple = args
+    key: tuple[Any] = args
     if kwds:
-        sorted_items: list = sorted(kwds.items())
+        sorted_items: list[Any] = sorted(kwds.items())
+        key += kwd_mark
         for item in sorted_items:
             key += item
     return key
@@ -70,7 +70,7 @@ class LinkedList:
         self._id_generator: Generator[int, None, None] = get_new_id()
         self._head: int = next(self._id_generator)
         self._tail: int = next(self._id_generator)
-        self._data: dict = {
+        self._data: dict[int, list] = {
             self._head: [None, self._tail, None],
             self._tail: [self._head, None, None],
         }
@@ -201,12 +201,12 @@ class DictCache:
     """
 
     def __init__(self, *, maxcount: int) -> None:
-        self._data: dict = {}
+        self._data: dict[tuple[Any], Any] = {}
         self._linked_list = LinkedList()
         self.maxcount = maxcount
         self.count = 0
 
-    def _update_key(self, key: Any) -> None:
+    def _update_key(self, key: tuple[Any]) -> None:
         """
         ----------
         INTERNAL METHOD
@@ -222,7 +222,7 @@ class DictCache:
         self._linked_list.delete(self._data[key][1])
         self._data[key][1] = self._linked_list.push_back(key)
 
-    def add(self, key: Any, value: Any) -> None:
+    def add(self, key: tuple[Any], value: Any) -> None:
         """
         Add new answer into the cache.
 
@@ -246,7 +246,7 @@ class DictCache:
         ptr_on_node = self._linked_list.push_back(key)
         self._data[key] = [value, ptr_on_node]
 
-    def __contains__(self, key: Any) -> bool:
+    def __contains__(self, key: tuple[Any]) -> bool:
         """
         Return true if key into the DictCache.
 
@@ -265,7 +265,7 @@ class DictCache:
         """
         return key in self._data
 
-    def __getitem__(self, key: Any) -> Any:
+    def __getitem__(self, key: tuple[Any]) -> Any:
         """
         return data under key if it exist, otherwise throow error.
         +Apdate the priorety.
@@ -287,8 +287,8 @@ class DictCache:
 
 
 def cache_calls(
-    function: Union[Callable, None] = None, *, capacity: int = 0
-) -> Callable:
+    function: Union[Callable[..., Any], None] = None, *, capacity: int = 0
+) -> Callable[..., Any]:
     """
     Analog of lru_cache from itertools.
 
@@ -313,11 +313,11 @@ def cache_calls(
     hashed_data: DictCache = DictCache(maxcount=capacity)
 
     @wraps(function)
-    def inner(*args, **kwds) -> Any:
+    def inner(*args: tuple[Any], **kwds: dict[str, Any]) -> Any:
         nonlocal hashed_data
         nonlocal function
         nonlocal capacity
-        key: tuple = make_key(args, kwds)
+        key: tuple[Any] = make_key(args, kwds)
         if not (key in hashed_data):
             hashed_data.add(key, function(*args, **kwds))
         return hashed_data[key]

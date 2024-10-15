@@ -5,7 +5,7 @@ from inspect import getfullargspec
 from typing import Callable, Any, Union
 
 
-def curry_explicit(function: Callable, arity: int) -> Callable:
+def curry_explicit(function: Callable[..., Any], arity: int) -> Callable[..., Any]:
     """
     Make from function sequence of them.
     To get result you can call func(arg1)(arg2)....(argn) where n = arity.
@@ -31,10 +31,10 @@ def curry_explicit(function: Callable, arity: int) -> Callable:
     if arity == 0:
         return function
 
-    args: list = []
+    args: list[Any] = []
 
     @wraps(function)
-    def inner(arg: Any) -> Union[Callable, Any]:
+    def inner(arg: Any) -> Union[Callable[..., Any], Any]:
         nonlocal arity
         nonlocal args
         args.append(arg)
@@ -52,7 +52,7 @@ def curry_explicit(function: Callable, arity: int) -> Callable:
     return inner
 
 
-def uncurry_explicit(function, arity) -> Callable:
+def uncurry_explicit(function: Callable[..., Any], arity: int) -> Callable[..., Any]:
     """
     Decompose curried function, get function only getted by curry_explicit.
     You can call now function as normal on: funk(arg1, arg2, ..., argn) where n = arity.
