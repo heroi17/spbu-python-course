@@ -65,7 +65,7 @@ def test_invalid_using() -> None:
     # Evaluated connot get as param func with param.
     with pytest.raises(TypeError):
 
-        #It is test so we ignore type checker(we give func wich have param - it's error)
+        # It is test so we ignore type checker(we give func wich have param - it's error)
         @smart_args
         def func1(*, a: Union[Evaluated, Any] = Evaluated(lambda x: x)) -> None:  # type: ignore
             pass
@@ -141,7 +141,9 @@ def test_Isolated_argument() -> None:
     # test with positional
     # test with dict
     @smart_args
-    def check_isolation_1(d: Union[dict[Any, Any], Isolated] = Isolated()) -> dict[Any, Any]:
+    def check_isolation_1(
+        d: Union[dict[Any, Any], Isolated] = Isolated()
+    ) -> dict[Any, Any]:
         assert type(d) is dict
         if type(d) is dict:
             d["a"] = 0
@@ -166,7 +168,9 @@ def test_Isolated_argument() -> None:
     # test with named
     # test with dict
     @smart_args
-    def check_isolation_3(*, d: Union[dict[Any, Any], Isolated] = Isolated()) -> dict[Any, Any]:
+    def check_isolation_3(
+        *, d: Union[dict[Any, Any], Isolated] = Isolated()
+    ) -> dict[Any, Any]:
         assert type(d) is dict
         if type(d) is dict:
             d["a"] = 0
