@@ -6,7 +6,10 @@ from typing import Callable, Any, Union, Type
 
 
 def fib(
-    n: int, *, doublestep: bool = False, recurcsive_call: Union[None, Callable[..., int]] = None
+    n: int,
+    *,
+    doublestep: bool = False,
+    recurcsive_call: Union[None, Callable[..., int]] = None
 ) -> int:
     if recurcsive_call is None:
         return 0
@@ -34,7 +37,10 @@ def fib(
 
 
 def steps_to(
-    stair: int, *, extrasteps: int = 0, recurcsive_call: Union[None, Callable[..., int]] = None
+    stair: int,
+    *,
+    extrasteps: int = 0,
+    recurcsive_call: Union[None, Callable[..., int]] = None
 ) -> int:
     if recurcsive_call is None:
         return 0

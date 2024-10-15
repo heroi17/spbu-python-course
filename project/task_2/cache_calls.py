@@ -2,7 +2,9 @@ from typing import Callable, Any, Union, Generator
 from inspect import getfullargspec, FullArgSpec
 from functools import lru_cache, wraps
 
-def make_key(args: tuple[Any], kwds: dict[str, Any], kwd_mark: tuple[object] = (object(),)) -> tuple[Any]:
+def make_key(
+    args: tuple[Any], kwds: dict[str, Any], kwd_mark: tuple[object] = (object(),)
+) -> tuple[Any]:
     """
     Make tuple from args and kwds, because dict is not hasheble type.
 

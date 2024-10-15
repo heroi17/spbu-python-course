@@ -2,6 +2,7 @@ import pytest
 from project.task_2.decorators import curry_explicit, uncurry_explicit
 from typing import Any
 
+
 def test_curry_errors() -> None:
     def help_func(*args: tuple[Any]) -> int:
         return sum(args)

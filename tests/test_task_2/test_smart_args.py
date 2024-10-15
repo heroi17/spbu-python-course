@@ -84,17 +84,41 @@ def test_invalid_using() -> None:
 @pytest.mark.parametrize(
     "func, args, kwargs, expected_data, enable_positional",
     [
-        (help_func_1, (1,), {"n1": 11}, [1, 2, 3, (), 11, 12, 13, {},], True),
         (
             help_func_1,
-            (1, 22,),
+            (1,),
+            {"n1": 11},
+            [
+                1,
+                2,
+                3,
+                (),
+                11,
+                12,
+                13,
+                {},
+            ],
+            True,
+        ),
+        (
+            help_func_1,
+            (
+                1,
+                22,
+            ),
             {"n1": 11, "HELLO": None},
             [1, 22, 3, (), 11, 12, 13, {"HELLO": None}],
             True,
         ),
         (
             help_func_1,
-            (11, 22, 33, 44, 55,),
+            (
+                11,
+                22,
+                33,
+                44,
+                55,
+            ),
             {"n1": 11},
             [11, 22, 33, (44, 55), 11, 12, 13, {}],
             True,
@@ -102,7 +126,11 @@ def test_invalid_using() -> None:
     ],
 )
 def test_correct_argument_providing(
-    func: Callable[..., Any], args: tuple[Any], kwargs: dict[str, Any], expected_data: list[Any], enable_positional: bool
+    func: Callable[..., Any],
+    args: tuple[Any],
+    kwargs: dict[str, Any],
+    expected_data: list[Any],
+    enable_positional: bool,
 ) -> None:
     new_func = smart_args(func, enable_positional=enable_positional)
     assert new_func(*args, **kwargs) == expected_data

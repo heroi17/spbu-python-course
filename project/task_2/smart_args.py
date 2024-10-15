@@ -108,7 +108,9 @@ def CheckForCorrectArgs(args: tuple[Any], kwargs: dict[str, Any]) -> None:
             raise TypeError(f"You cannot use Isolated() when call the function.")
 
 
-def fillDictByDefaults(dict_to_fill: dict[str, Any], dict_defoults: dict[str, Any]) -> None:
+def fillDictByDefaults(
+    dict_to_fill: dict[str, Any], dict_defoults: dict[str, Any]
+) -> None:
     """
     Special function for smart_args.
 
