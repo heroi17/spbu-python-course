@@ -3,7 +3,6 @@ from project.task_2.decorators import curry_explicit, uncurry_explicit
 
 
 def test_curry_errors() -> None:
-
     def help_func(*args) -> int:
         return sum(args)
 
@@ -15,7 +14,6 @@ def test_curry_errors() -> None:
 
 
 def test_none_return() -> None:
-
     def help_func(*args):
         return sum(args)
 
@@ -34,14 +32,7 @@ def test_curry_correct_argument_providing() -> None:
         ),
         4,
     )
-    assert (
-        1,
-        2,
-        3,
-        4,
-    ) == curryed_func(
-        1
-    )(2)(
+    assert (1, 2, 3, 4,) == curryed_func(1)(2)(
         3
     )(4)
 
@@ -50,7 +41,6 @@ def test_curry_correct_argument_providing() -> None:
 
 
 def test_correct_uncurry_working() -> None:
-
     def func(a: int, b: int, c: int) -> int:
         return a + b + c
 
@@ -64,7 +54,6 @@ def test_correct_uncurry_working() -> None:
 
 
 def test_curry_for_build_in_functions() -> None:
-
     # We got the same function as we put in.
     assert uncurry_explicit(curry_explicit(len, 3), 3) is len
     assert uncurry_explicit(curry_explicit(sum, 2), 2) is sum

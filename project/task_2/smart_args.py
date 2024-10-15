@@ -189,16 +189,16 @@ def smart_args(
         return_kwonlyargs: dict[str, Any] = {}
 
         # Defoult args.
-        defoult_args: dict = {}
+        default_args: dict = {}
         if not data.defaults is None:
             for i in range(len(data.defaults)):
-                defoult_args[data.args[i + len(data.args) - len(data.defaults)]] = (
+                default_args[data.args[i + len(data.args) - len(data.defaults)]] = (
                     data.defaults[i]
                 )
 
-        defoult_kwonlyargs: dict = {}
+        default_kwonlyargs: dict = {}
         if not data.kwonlydefaults is None:
-            defoult_kwonlyargs = copy.copy(data.kwonlydefaults)
+            default_kwonlyargs = copy.copy(data.kwonlydefaults)
 
         return_args_dict: dict = {}
 
@@ -231,10 +231,10 @@ def smart_args(
                 return_varkw[el] = kwargs[el]
 
         # use defoult values if it's need for args
-        fillDictByDefaults(return_args_dict, defoult_args)
+        fillDictByDefaults(return_args_dict, default_args)
 
         # use defoult values if it's need for kwargs
-        fillDictByDefaults(return_kwonlyargs, defoult_kwonlyargs)
+        fillDictByDefaults(return_kwonlyargs, default_kwonlyargs)
 
         # check for existing values and fill return_args by return_args_dict
         for el in data.args:
