@@ -76,8 +76,6 @@ class Evaluated:
 
     def __init__(self, func: Callable[[], Any]) -> None:
         self._func = func
-        if type(func) is Isolated:
-            raise TypeError("You cannot use as argument Isolated into Evaluated.")
         if type(func) is Evaluated:
             raise TypeError("You cannot use as argument Evaluated into Evaluated.")
         if not callable(func):
@@ -180,7 +178,7 @@ def smart_args(
                 )
 
     @wraps(func)
-    def inner(*args, **kwargs) -> Union[Callable[..., Any], Any]:
+    def inner(*args: Any, **kwargs: Any) -> Union[Callable[..., Any], Any]:
         # Check for invalid using smart args functions
         CheckForCorrectArgs(args, kwargs)
 

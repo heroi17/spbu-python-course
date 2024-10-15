@@ -80,7 +80,7 @@ def uncurry_explicit(function: Callable[..., Any], arity: int) -> Callable[..., 
 
     if hasattr(function, "__decorated_by_curry_explicit"):
         if getattr(function, "__arity_glob") == arity:
-            return getattr(function, "__decorated_by_curry_explicit")
+            return getattr(function, "__decorated_by_curry_explicit")  # type: ignore
         else:
             raise ValueError(
                 f'Expected arity is {getattr(function, "__arity_glob")}, but given arity is {arity}'

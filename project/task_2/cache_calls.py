@@ -2,8 +2,9 @@ from typing import Callable, Any, Union, Generator
 from inspect import getfullargspec, FullArgSpec
 from functools import lru_cache, wraps
 
+
 def make_key(
-    args: tuple[Any], kwds: dict[str, Any], kwd_mark: tuple[object] = (object(),)
+    args: tuple[Any, ...], kwds: dict[str, Any], kwd_mark: tuple[Any, ...] = (object(),)
 ) -> tuple[Any]:
     """
     Make tuple from args and kwds, because dict is not hasheble type.
@@ -23,7 +24,7 @@ def make_key(
     tuple
         The hashable equivalent of the parameters
     """
-    key: tuple[Any] = args
+    key: tuple[Any, ...] = args
     if kwds:
         sorted_items: list[Any] = sorted(kwds.items())
         key += kwd_mark
@@ -72,7 +73,7 @@ class LinkedList:
         self._id_generator: Generator[int, None, None] = get_new_id()
         self._head: int = next(self._id_generator)
         self._tail: int = next(self._id_generator)
-        self._data: dict[int, list] = {
+        self._data: dict[int, list[Any]] = {
             self._head: [None, self._tail, None],
             self._tail: [self._head, None, None],
         }
@@ -315,7 +316,7 @@ def cache_calls(
     hashed_data: DictCache = DictCache(maxcount=capacity)
 
     @wraps(function)
-    def inner(*args: tuple[Any], **kwds: dict[str, Any]) -> Any:
+    def inner(*args: Any, **kwds: Any) -> Any:
         nonlocal hashed_data
         nonlocal function
         nonlocal capacity

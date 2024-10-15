@@ -198,6 +198,6 @@ def test_correct_internal_caching() -> None:
     ],
 )
 def test_cache_for_Pythons_functions(
-    func: Callable[..., Any], capacity: int, args: dict[Any], kwds: dict[str, Any]
+    func: Callable[..., Any], capacity: int, args: dict[str, Any], kwds: dict[str, Any]
 ) -> None:
     assert func(*args, **kwds) == cache_calls(func, capacity=capacity)(*args, **kwds)

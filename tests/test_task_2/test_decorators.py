@@ -4,7 +4,7 @@ from typing import Any
 
 
 def test_curry_errors() -> None:
-    def help_func(*args: tuple[Any]) -> int:
+    def help_func(*args: Any) -> int:
         return sum(args)
 
     with pytest.raises(TypeError):
@@ -15,7 +15,7 @@ def test_curry_errors() -> None:
 
 
 def test_none_return() -> None:
-    def help_func(*args: tuple[Any]):
+    def help_func(*args: Any) -> int:
         return sum(args)
 
     assert curry_explicit(help_func, 3)(1)(2)(3) is None
