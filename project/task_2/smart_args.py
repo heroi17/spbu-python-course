@@ -192,9 +192,9 @@ def smart_args(
         default_args: dict = {}
         if not data.defaults is None:
             for i in range(len(data.defaults)):
-                default_args[data.args[i + len(data.args) - len(data.defaults)]] = (
-                    data.defaults[i]
-                )
+                default_args[
+                    data.args[i + len(data.args) - len(data.defaults)]
+                ] = data.defaults[i]
 
         default_kwonlyargs: dict = {}
         if not data.kwonlydefaults is None:
