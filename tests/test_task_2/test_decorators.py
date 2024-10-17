@@ -33,14 +33,7 @@ def test_curry_correct_argument_providing() -> None:
         ),
         4,
     )
-    assert (
-        1,
-        2,
-        3,
-        4,
-    ) == curryed_func(
-        1
-    )(2)(
+    assert (1, 2, 3, 4,) == curryed_func(1)(2)(
         3
     )(4)
 
