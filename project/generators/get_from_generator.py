@@ -31,7 +31,9 @@ def get_elem_from_gen(
         nonlocal index
 
         if n < index + 1:
-            raise IndexError(f"Index can not be negative: {index}")
+            raise IndexError(
+                f"Index can not be negative or less then n+1 in last call: {index}"
+            )
 
         result = None
         while index != n:

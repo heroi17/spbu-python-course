@@ -4,18 +4,16 @@ from typing import Generator
 
 def prime_number_generator() -> Generator[int, None, None]:
     """
-    ------
-    Explonations:
-    ------
-    Return Generator.
+    -------
+    Explanation:
+    -------
+    Returns a generator that yields prime numbers.
 
-    ------
+    -------
     Returns:
-    ------
+    -------
     Generator[int, None, None]:
-        Generator wich give us prime numbers.
-
-
+        A generator that yields prime numbers.
     """
     count = 2
     # maybe not the fastest solution, we can use memory to make it faster.
@@ -31,9 +29,3 @@ def prime_number_generator() -> Generator[int, None, None]:
             yield count
 
         count += 1
-
-
-for i in prime_number_generator():
-    print(i)
-    if i > 10:
-        break

@@ -4,9 +4,9 @@ from typing import Generator
 def get_rgba_generator() -> Generator[tuple[int, int, int, int], None, None]:
     """
     -------
-    Explonation
+    Explanation
     -------
-    Return Generator wich generate rgba_vec.
+    Returns a generator which yields rgba_vec tuples.
 
 
     The output is in the format (R, G, B, A), where:
@@ -24,17 +24,17 @@ def get_rgba_generator() -> Generator[tuple[int, int, int, int], None, None]:
     -------
     Example:
     -------
-    >>> gen = get_rgba_gen()
-    >>> next(gen)
+    gen = get_rgba_gen()
+    next(gen)
     (0, 0, 0, 0)
-    >>> next(gen)
+    next(gen)
     (0, 0, 0, 2)
-    >>> next(gen)
+    next(gen)
     (0, 0, 0, 4)
-    ...
-    >>> next(gen)
+
+    next(gen)
     (0, 0, 255, 100)
-    >>> next(gen)
+    next(gen)
     (0, 1, 0, 0)
     """
     return (
@@ -42,37 +42,36 @@ def get_rgba_generator() -> Generator[tuple[int, int, int, int], None, None]:
         for r in range(256)
         for g in range(256)
         for b in range(256)
-        for a in range(0, 101, 2)
+        for a in range(0, 101)
+        if a % 2 == 0
     )
 
 
 def get_rgba_vec(index: int) -> tuple[int, int, int, int]:
     """
-    ------
-    Explonations:
-    ------
-    Give rgba_vec under given index.
-    Indexing starts with 0.
+    -------
+    Explanation:
+    -------
+    Returns the rgba_vec tuple at the given index.
+    Indexing starts at 0.
 
-    ------
+    -------
     Args:
-    ------
+    -------
     index: int
-        Index of rgba_vec in sequence.
+        Index of the rgba_vec in the sequence.
 
-    ------
+    -------
     Returns:
-    ------
+    -------
     tuple[int, int, int, int]
-        rgba_vec
+        The rgba_vec at the specified index.
     """
     if index < 0:
-        raise IndexError(f"Index of Rgba_vec can not be negative: {index}")
+        raise IndexError(f"Index of rgba_vec can not be negative: {index}")
 
     if index >= 256**3 * 51:
-        raise IndexError(
-            f"Sorry, but there no rgba_vec with too big index such as yurs: {index}"
-        )
+        raise IndexError(f"There no rgba_vec with too big index such as yurs: {index}")
     i = 0
     for vec in get_rgba_generator():
         if i == index:

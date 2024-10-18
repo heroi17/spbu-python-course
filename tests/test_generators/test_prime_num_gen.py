@@ -16,12 +16,20 @@ def test_prime_gen_non_decorated(index: int, expected_prime: int) -> None:
 
 
 @pytest.mark.parametrize(
-    "index, expected_prime",
-    [(1, 2), (2, 3), (3, 5), (281, 1823), (921, 7211), (1000, 7919)],
+    "index, expected_prime_sequence",
+    [
+        (1, [2, 3, 5, 7]),
+        (3, [5]),
+        (281, [1823, 1831, 1847, 1861, 1867, 1871, 1873]),
+        (921, [7211]),
+        (1000, [7919]),
+    ],
 )
-def test_prime_gen_decorated(index: int, expected_prime: int) -> None:
+def test_prime_gen_decorated(index: int, expected_prime_sequence: list[int]) -> None:
     decorated_gen = get_elem_from_gen(prime_number_generator)
-    assert decorated_gen(index) == expected_prime
+    for el in expected_prime_sequence:
+        assert el == decorated_gen(index)
+        index += 1
 
 
 @pytest.mark.parametrize("index", [-1, 0])
